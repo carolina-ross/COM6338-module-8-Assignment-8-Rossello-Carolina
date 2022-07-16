@@ -20,8 +20,8 @@ function searchWeather(location) {
 }
 
 function showWeather(data) {  
-    if(data.cod === '404' || data.cod === '400'){
-        sectionWeather.innerHTML = '<p>Location Not Found</p>';  
+    if(data.cod !== 200){
+        sectionWeather.innerHTML = '<p>Location Not Found</p>'; 
     }
     else{
         if(data.cod === 200){
