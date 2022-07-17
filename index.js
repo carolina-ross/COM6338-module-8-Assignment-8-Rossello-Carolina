@@ -8,7 +8,7 @@ buttonSubmit.addEventListener('click', onSearch);
 
 function searchWeather(location) { 
     const apiKey = 'a76b32bf5b491e65fd99110fed59d0ba';
-    const url = `https://api.openweathermap.org/data/2.5/weather?zip=${location},us&appid=${apiKey}`;
+    const url = `https://api.openweathermap.org/data/2.5/weather?zip=${location},&appid=${apiKey}&units=imperial`;
 
     fetch(url)
         .then (response => response.json())
@@ -21,15 +21,13 @@ function searchWeather(location) {
 
 function showWeather(data) {  
     if(data.cod !== 200){
-        sectionWeather.innerHTML = '<p>Location Not Found</p>'; 
+        sectionWeather.innerHTML = '<p>Location Not Found</p>';  
     }
     else{
         if(data.cod === 200){
-            const { coord: {lat, lon}, main: { feels_like, temp }, name, sys: {country}, weather: {[0]: {description, icon}}} = data;
-            const tempFahrenheit = kelvinFahrenheit(temp);
-            const feelLike = kelvinFahrenheit(feels_like);
+            const { coord: {lat, lon}, main: {feels_like, temp}, name, sys: {country}, weather: {[0]: {description, icon}}} = data;
             var dateTime = new Date();
-            var currentTime = dateTime.toLocaleTimeString(navigator.language, {
+            var currentTime = dateTime.toLocaleTimeString('en-US', {
                 hour: '2-digit',
                 minute:'2-digit'
               });
@@ -39,17 +37,14 @@ function showWeather(data) {
                 <a href="https://www.google.com/maps/search/?api=1&query=${lat},${lon}" target="__BLANK">Click to view map</a>
                 <img src="https://openweathermap.org/img/wn/${icon}@2x.png">
                 <p style="text-transform: capitalize;">${description}</p><br>
-                <p>Current: ${ tempFahrenheit } ° F</p>
-                <p>Feels like: ${feelLike} F</p><br>
+                <p>Current: ${ temp } ° F</p>
+                <p>Feels like: ${feels_like} F</p><br>
                 <p>Last updated: ${currentTime}</p>
             `;
         }
     }    
 }
 
-function kelvinFahrenheit(temp) {
-    return parseInt(temp - 273.15) * 9/5 + 32;
-}
 
 function onSearch(e) {
     e.preventDefault();
